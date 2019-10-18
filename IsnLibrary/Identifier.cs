@@ -38,7 +38,8 @@ namespace IsnLibrary
         {
             String tempNumber = number.Trim().Replace("-", string.Empty).ToUpper();
             IdType TempType = GetType(tempNumber);
-            IsValid = Validate(tempNumber, TempType);       
+            IsValid = Validate(tempNumber, TempType);  
+            // validate type is correct for the supplied isn
             if (IsValid)
             {
                 if (TempType == IdType.EANISSN || TempType == IdType.ISBN10)
@@ -75,7 +76,8 @@ namespace IsnLibrary
 
         private bool Validate(String number, IdType type)
         {
-            return true;
+            //check regex against valid for type
+            return CheckDigitRoutines.generateCheck(number) == number[number.Length-1];
         }
 
 
