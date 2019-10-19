@@ -17,6 +17,8 @@ namespace IsnLibrary.Tests
         {
             Identifier identifier = IdentifierFactory.Create("9780316769532");
             Assert.That(identifier, Is.Not.Null);
+            Assert.That(identifier, Is.InstanceOf<ISBN>());
+            Assert.That(identifier.Validate(), Is.True);
         }
 
         [Test]

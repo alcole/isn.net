@@ -8,22 +8,23 @@ namespace IsnLibrary
     public class IdentifierFactory
     {
         public static Identifier? Create(string number) {
-            try {
-                switch (number.Length)
-                {
-                    case 8:
-                    case 9:
-                        return new Identifier(number, IdentifierType.ISSN);
-                    case 10:
-                        return new Identifier(number, IdentifierType.ISBN10);
-                    case 13:
-                        // return new Identifier(number, IdentifierType.ISBN); 
-                        return new ISBN(number);
-                    default:
-                        return new Identifier(number, IdentifierType.Other);
-                }
-            } catch(ArgumentException exception) {
-                Debug.WriteLine($"Validation failed: {exception.ToString()}");
+            Identifier identifier;
+            switch (number.Length)
+            {
+                case 8:
+                case 9:
+                    identifier = new ISSN(number);
+                    break;
+                case 10:
+                case 13:
+                    identifier =  new ISBN(number);
+                    break;
+                default:
+                    identifier =  new Identifier(number);
+                    break;
+            }
+            if(identifier.Validate()) {
+                return identifier;
             }
             return null;
         }

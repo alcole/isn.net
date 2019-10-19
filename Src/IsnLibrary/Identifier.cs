@@ -6,38 +6,54 @@ namespace IsnLibrary
 {
     public class ISBN : Identifier
     {
-        public ISBN(string number) : base(number, IdentifierType.ISBN) {}
+        public ISBN(string number) : base(number) {}
+
+        public string ISBN10 { get { return Number.Length == 13 ? Number.Substring(3) : Number; } }
+        public string ISBN13 { get { return Number.Length == 13 ? Number : $"978{Number}"; } }
+
+        public override bool Validate()
+        {
+            // All ISBN 13s should start with 977 or 978
+            if(Number.Length == 13 && !(Number.StartsWith("978") || Number.StartsWith("977")))
+                return false;
+
+            // check digit test
+            char checkDigit = CheckDigitRoutines.generateCheck(Number);
+            if(!Number.EndsWith(checkDigit))
+                return false;
+
+            return base.Validate();
+        }
+
+    }
+
+    public class ISSN : Identifier
+    {
+        public ISSN(string number) : base(number) {}
+
+        public override bool Validate()
+        {
+
+            // check digit test
+            char checkDigit = CheckDigitRoutines.generateCheck(Number);
+            if(!Number.EndsWith(checkDigit))
+                return false;
+
+            return base.Validate();
+        }
     }
 
     public class Identifier
     {
-        private string Number { get; }
-        private IdentifierType Type { get; }
+        protected string Number { get; }
 
-        public Identifier(string number, IdentifierType identifierType)
+        public Identifier(string number)
         {
-            if (!Validate(number, identifierType))
-            {
-                throw new ArgumentException("Not a valid ISN");
-            }
             Number = number;
-            Type = Type;
         }
 
-        private bool Validate(String number, IdentifierType type)
+        public virtual bool Validate()
         {
-            // Allow "other" ISNs skip validation
-            if(type == IdentifierType.Other)
-                return true;
-
-            // check digit test
-            char checkDigit = CheckDigitRoutines.generateCheck(number);
-            if(!number.EndsWith(checkDigit))
-                return false;
-
-            // All ISBN 13s should start with 977 or 978
-            if(type == IdentifierType.ISBN && !(number.StartsWith("978") || number.StartsWith("977")))
-                return false;
 
             return true;
         }
