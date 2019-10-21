@@ -6,10 +6,14 @@ namespace IsnLibrary
 {
     public class ISBN : Identifier
     {
-        public ISBN(string number) : base(number) {}
-
-        public string ISBN10 { get { return (Number.Length == 13 && Number.Substring(0,3).Equals("978")) ? Number.Substring(3,9) + CheckDigitRoutines.generateCheckIsbn10Issn(Number.Substring(3,9),10) : Number; } }
-        public string ISBN13 { get { return Number.Length == 13 ? Number : $"978{Number}"; } }
+        public ISBN(string number) : base(checkISBN(number)) {
+        }
+/*
+        public string ISBN10 { get { 
+                return (Number.Length == 13 && Number.Substring(0,3).Equals("978")) ?
+                    Number.Substring(3,9) + CheckDigitRoutines.generateCheckIsbn10Issn(Number.Substring(3,9),10) :
+                    Number.Length == 10 ? Number : null; } }
+        public string ISBN13 { get { return Number.Length == 13 ? Number : $"978{Number}"; } }*/
 
         public override bool Validate()
         {
@@ -25,6 +29,32 @@ namespace IsnLibrary
             return base.Validate();
         }
 
+        private static string checkISBN(string isbn)
+        {
+            return isbn.Length == 13 ? isbn : "978" + isbn.Substring(0, 9) + CheckDigitRoutines.generateEanCheckdigit("978" + isbn.Substring(0, 9));
+        }
+
+
+    }
+
+
+    public class ISBN10 : Identifier
+    {
+        public ISBN10(string number) : base(number) { }
+
+        public override bool Validate()
+        {
+            if (Number.Length != 10)
+            {
+                return false;
+            }
+            char checkDigit = CheckDigitRoutines.generateCheckIsbn10Issn(Number, 10);
+            if (!Number.EndsWith(checkDigit))
+                return false;
+
+            return base.Validate();
+
+        }
     }
 
     public class ISSN : Identifier

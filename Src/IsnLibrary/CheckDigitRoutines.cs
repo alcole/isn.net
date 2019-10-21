@@ -7,10 +7,10 @@ namespace IsnLibrary
     class CheckDigitRoutines
     {
         private static int ISBN13_LENGTH = 13;
-        private static int ISBN10_LENGTH = 10;
-        private static int ISSN_LENGTH = 8;
+        //private static int ISBN10_LENGTH = 10;
+        //private static int ISSN_LENGTH = 8;
         private static int EAN_LENGTH = 13;
-        private static int ISNI_LENGTH = 16;
+       // private static int ISNI_LENGTH = 16;
 
         public static char generateCheck(String isn)
         {
@@ -55,7 +55,7 @@ namespace IsnLibrary
             return(char)(checkSum + 48);
         }
 
-        private static char generateEanCheckdigit(String isn)
+        public static char generateEanCheckdigit(String isn)
         {
             //if length not 12 or 13 reject
             double checkSum = 0;

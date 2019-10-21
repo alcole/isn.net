@@ -15,11 +15,25 @@ namespace IsnLibrary.Tests
         {
             ISBN identifier = new ISBN("9780262510875");
             Assert.That(identifier.Validate(), Is.True);
-            Assert.That(identifier.ISBN10.Length, Is.EqualTo(10));
+/*            Assert.That(identifier.ISBN10.Length, Is.EqualTo(10));
             Assert.That(identifier.ISBN10, Is.EqualTo("0262510871"));
             Assert.That(identifier.ISBN13.Length, Is.EqualTo(13));
-            Assert.That(identifier.ISBN13, Is.EqualTo("9780262510875"));
+            Assert.That(identifier.ISBN13, Is.EqualTo("9780262510875"));*/
         }
+
+        [Test]
+        public void Isbn10test()
+        {
+            ISBN10 identifier = new ISBN10("0262510871");
+            Assert.That(identifier.Validate(), Is.True);
+            //convert the 10 to 13
+            ISBN id2 = new ISBN(identifier.ToString());
+            Assert.That(id2.ToString().Length, Is.EqualTo(13));
+            Assert.That(id2.Validate(), Is.True);
+            Assert.That(id2.ToString(), Is.EqualTo("9780262510875"));
+        }
+        
+        
 
         [Test]
         public void NewIdentifier_BadStart_FailsValidation()
