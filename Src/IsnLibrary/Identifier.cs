@@ -13,8 +13,8 @@ namespace IsnLibrary
 
         public override bool Validate()
         {
-            // All ISBN 13s should start with 977 or 978
-            if(Number.Length == 13 && !(Number.StartsWith("978") || Number.StartsWith("977")))
+            // All ISBN 13s should start with 978 or 979
+            if(Number.Length == 13 && !(Number.StartsWith("978") || Number.StartsWith("979")))
                 return false;
 
             // check digit test

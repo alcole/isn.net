@@ -55,6 +55,30 @@ namespace IsnLibrary
             return(char)(checkSum + 48);
         }
 
+        private static char generateEanCheckdigit(String isn)
+        {
+            //if length not 12 or 13 reject
+            double checkSum = 0;
+            if (isn.Length == ISBN13_LENGTH || isn.Length == ISBN13_LENGTH - 1)
+            {
+                for (int i = 1; i < 12; i = i + 2)
+                {
+                    checkSum += Char.GetNumericValue(isn[i]);
+                }
+                checkSum *= 3;
+                for (int i = 0; i < 12; i = i + 2)
+                {
+                    checkSum += Char.GetNumericValue(isn[i]);
+                }
+                checkSum = (10 - (checkSum % 10));
+                if (checkSum > 9)
+                {
+                    checkSum = 0;
+                }
+            }
+            return (char)(checkSum + 48);
+        }
+
         private static char generateCheckIsbn10Issn(String isn, int length)
         {
             double checkSum = 0;
