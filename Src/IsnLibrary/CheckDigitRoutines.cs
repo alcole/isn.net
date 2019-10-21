@@ -14,12 +14,12 @@ namespace IsnLibrary
 
         public static char generateCheck(String isn)
         {
-            if (!(isn.Length == ISBN13_LENGTH
+/*            if (!(isn.Length == ISBN13_LENGTH
                 || isn.Length == ISBN10_LENGTH
                 || isn.Length == ISBN13_LENGTH - 1
                 || isn.Length == ISBN10_LENGTH - 1
                 || isn.Length == ISSN_LENGTH
-                || isn.Length == ISSN_LENGTH - 1)) throw new IllegalArgumentException();
+                || isn.Length == ISSN_LENGTH - 1)) throw new IllegalArgumentException();*/
             if (isn.Length == EAN_LENGTH || isn.Length == EAN_LENGTH - 1)
             {
                 return generateCheck13digit(isn);
@@ -79,7 +79,7 @@ namespace IsnLibrary
             return (char)(checkSum + 48);
         }
 
-        private static char generateCheckIsbn10Issn(String isn, int length)
+        public static char generateCheckIsbn10Issn(String isn, int length)
         {
             double checkSum = 0;
             for (int i = 0; i < length - 1; i++)

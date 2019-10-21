@@ -9,6 +9,7 @@ namespace IsnLibrary
     {
         public static Identifier? Create(string number) {
             Identifier identifier;
+            number = number.Replace("-", string.Empty).ToUpper();
             switch (number.Length)
             {
                 case 8:

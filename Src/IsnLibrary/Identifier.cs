@@ -8,7 +8,7 @@ namespace IsnLibrary
     {
         public ISBN(string number) : base(number) {}
 
-        public string ISBN10 { get { return Number.Length == 13 ? Number.Substring(3) : Number; } }
+        public string ISBN10 { get { return (Number.Length == 13 && Number.Substring(0,3).Equals("978")) ? Number.Substring(3,9) + CheckDigitRoutines.generateCheckIsbn10Issn(Number.Substring(3,9),10) : Number; } }
         public string ISBN13 { get { return Number.Length == 13 ? Number : $"978{Number}"; } }
 
         public override bool Validate()
