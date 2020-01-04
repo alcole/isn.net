@@ -1,96 +1,75 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace IsnLibrary
+﻿namespace IsnLibrary
 {
-    public class ISBN : Identifier
-    {
-        public ISBN(string number) : base(checkISBN(number)) {
-        }
-/*
-        public string ISBN10 { get { 
-                return (Number.Length == 13 && Number.Substring(0,3).Equals("978")) ?
-                    Number.Substring(3,9) + CheckDigitRoutines.generateCheckIsbn10Issn(Number.Substring(3,9),10) :
-                    Number.Length == 10 ? Number : null; } }
-        public string ISBN13 { get { return Number.Length == 13 ? Number : $"978{Number}"; } }*/
-
-        public override bool Validate()
-        {
-            // All ISBN 13s should start with 978 or 979
-            if(Number.Length == 13 && !(Number.StartsWith("978") || Number.StartsWith("979")))
-                return false;
-
-            // check digit test
-            char checkDigit = CheckDigitRoutines.generateCheck(Number);
-            if(!Number.EndsWith(checkDigit))
-                return false;
-
-            return base.Validate();
-        }
-
-        private static string checkISBN(string isbn)
-        {
-            return isbn.Length == 13 ? isbn : "978" + isbn.Substring(0, 9) + CheckDigitRoutines.generateEanCheckdigit("978" + isbn.Substring(0, 9));
-        }
-
-
-    }
-
-
-    public class ISBN10 : Identifier
-    {
-        public ISBN10(string number) : base(number) { }
-
-        public override bool Validate()
-        {
-            if (Number.Length != 10)
-            {
-                return false;
-            }
-            char checkDigit = CheckDigitRoutines.generateCheckIsbn10Issn(Number, 10);
-            if (!Number.EndsWith(checkDigit))
-                return false;
-
-            return base.Validate();
-
-        }
-    }
-
-    public class ISSN : Identifier
-    {
-        public ISSN(string number) : base(number) {}
-
-        public override bool Validate()
-        {
-
-            // check digit test
-            char checkDigit = CheckDigitRoutines.generateCheck(Number);
-            if(!Number.EndsWith(checkDigit))
-                return false;
-
-            return base.Validate();
-        }
-    }
-
     public class Identifier
-    {
-        protected string Number { get; }
+    {     
+        public string isn { get; set; }
+        public bool isValid { get; set; }
+        public IdentifierType identifierType { get; set; }
+        protected string originalId { get; }
 
         public Identifier(string number)
         {
-            Number = number;
+            originalId = number;
+            cleanIsn();
+            isValid = Validate();
+            identifierType = isValid ? setType() : IdentifierType.Invalid;
+        }
+
+       // public Identifier(string number, string type)
+        //error if type doesn't match
+
+        private void cleanIsn()
+        {
+            isn = originalId.Trim().ToUpper().Replace(" ", "").Replace("-","");
         }
 
         public virtual bool Validate()
         {
-
-            return true;
+            char checkDigit = '0';
+            if (isn.Length == 13)
+            {
+                checkDigit = CheckDigitRoutines.generateCheck(isn);
+                
+            }
+            else if (isn.Length == 10)
+            {
+                checkDigit = CheckDigitRoutines.generateCheckIsbn10Issn(isn, 10);
+            }
+            else if (isn.Length == 8)
+            {
+                checkDigit = CheckDigitRoutines.generateCheckIsbn10Issn(isn, 8);
+            }
+            else
+            {
+                return false;
+            }
+            return isn.EndsWith(checkDigit);
         }
 
-        public override string ToString()
+        private IdentifierType setType()
         {
-            return Number.Trim().Replace("-", string.Empty).ToUpper();
+            IdentifierType type = IdentifierType.Other;
+            if (isn.Length == 13 )
+            {
+                type = IdentifierType.EAN;
+            }
+            switch (isn)
+            {
+                //todo ISMN, ean977, 
+                case var result when IsnRegexs.IsmnRx.IsMatch(isn):
+                    type = IdentifierType.ISMN;
+                    break;
+                case var result when IsnRegexs.IsbnRx.IsMatch(isn):
+                    type = IdentifierType.ISBN;
+                    break;
+                case var result when IsnRegexs.Isbn10Rx.IsMatch(isn):
+                    type = IdentifierType.ISBN10;
+                    break;
+                case var result when IsnRegexs.IssnRx.IsMatch(isn):
+                    type = IdentifierType.ISSN;
+                    break;
+            }          
+            return type;
         }
     }
 }
