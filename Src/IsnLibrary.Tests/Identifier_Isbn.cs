@@ -23,12 +23,20 @@ namespace IsnLibrary.Tests
         {
             Identifier isbn10 = new Identifier("0262510871");
             Assert.That(isbn10.isValid, Is.True);
-            Assert.That(isbn10.identifierType, Is.EqualTo(IdentifierType.ISBN10));
-            //convert the 10 to 13
-            /*            ISBN id2 = new ISBN(identifier.ToString());
-                        Assert.That(id2.ToString().Length, Is.EqualTo(13));
-                        Assert.That(id2.Validate(), Is.True);
-                        Assert.That(id2.ToString(), Is.EqualTo("9780262510875"));*/
+            Assert.That(isbn10.originalId, Is.EqualTo("0262510871"));
+            Assert.That(isbn10.isn, Is.EqualTo("9780262510875"));
+            Assert.That(isbn10.identifierType, Is.EqualTo(IdentifierType.ISBN));
+        }
+
+        [Test]
+        public void EanIssnTest()
+        {
+            Identifier EanIssn = new Identifier("9772049363002");
+            Assert.That(EanIssn.isValid, Is.True);
+            Assert.That(EanIssn.identifierType, Is.EqualTo(IdentifierType.ISSN));
+            Assert.That(EanIssn.originalId, Is.EqualTo("9772049363002"));
+            Assert.That(EanIssn.isn, Is.EqualTo("20493630"));
+            Assert.That(EanIssn.identifierType, Is.EqualTo(IdentifierType.ISSN));
         }
 
         [Test]

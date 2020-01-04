@@ -5,7 +5,7 @@
         public string isn { get; set; }
         public bool isValid { get; set; }
         public IdentifierType identifierType { get; set; }
-        protected string originalId { get; }
+        public string originalId { get; }
 
         public Identifier(string number)
         {
@@ -13,10 +13,17 @@
             cleanIsn();
             isValid = Validate();
             identifierType = isValid ? setType() : IdentifierType.Invalid;
+            if (isValid && identifierType == IdentifierType.ISBN10)
+            {
+                isn = "978" + isn.Substring(0, 9) + CheckDigitRoutines.generateEanCheckdigit("978" + isn);
+                identifierType = IdentifierType.ISBN;
+            }
+            if (isValid && identifierType == IdentifierType.EANISSN)
+            {
+                isn = isn.Substring(3, 7) + CheckDigitRoutines.generateCheckIsbn10Issn(isn.Substring(3, 7), 8);
+                identifierType = IdentifierType.ISSN;
+            }
         }
-
-       // public Identifier(string number, string type)
-        //error if type doesn't match
 
         private void cleanIsn()
         {
@@ -28,8 +35,7 @@
             char checkDigit = '0';
             if (isn.Length == 13)
             {
-                checkDigit = CheckDigitRoutines.generateCheck(isn);
-                
+                checkDigit = CheckDigitRoutines.generateCheck(isn);                
             }
             else if (isn.Length == 10)
             {
@@ -61,6 +67,9 @@
                     break;
                 case var result when IsnRegexs.IsbnRx.IsMatch(isn):
                     type = IdentifierType.ISBN;
+                    break;
+                case var result when IsnRegexs.EanIssnRx.IsMatch(isn):
+                    type = IdentifierType.EANISSN;
                     break;
                 case var result when IsnRegexs.Isbn10Rx.IsMatch(isn):
                     type = IdentifierType.ISBN10;
