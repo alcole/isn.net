@@ -3,7 +3,7 @@ using System;
 
 namespace IsnLibrary.Tests
 {
-    public class Identifier_Isbn
+    public class Identifier_Tests
     {
         [SetUp]
         public void Setup()
@@ -40,6 +40,17 @@ namespace IsnLibrary.Tests
         }
 
         [Test]
+        public void EanIssnTestwithX()
+        {
+            Identifier EanIssn = new Identifier("9772434561006");
+            Assert.That(EanIssn.isValid, Is.True);
+            Assert.That(EanIssn.identifierType, Is.EqualTo(IdentifierType.ISSN));
+            Assert.That(EanIssn.originalId, Is.EqualTo("9772434561006"));
+            Assert.That(EanIssn.isn, Is.EqualTo("2434561X"));
+            Assert.That(EanIssn.identifierType, Is.EqualTo(IdentifierType.ISSN));
+        }
+
+        [Test]
         public void Ismntest()
         {
             Identifier Ismn = new Identifier("979-0-9016791-7-7");
@@ -57,20 +68,12 @@ namespace IsnLibrary.Tests
             Assert.That(issn.identifierType, Is.EqualTo(IdentifierType.ISSN));
         }
 
-
-
-       // [Test]
-        /*        public void NewIdentifier_BadStart_FailsValidation()
-                {
-                    Identifier identifier = new ISBN("1782312312314");
-                    Assert.That(identifier.Validate(), Is.False);
-                }
-
-                [Test]
-                public void NewIdentifier_BadCheckDigit_FailsValidation()
-                {
-                   Identifier identifier = new ISBN("9780316769531");
-                    Assert.That(identifier.Validate(), Is.False);
-                }*/
+        [Test]
+        public void NewIdentifier_BadCheckDigit_FailsValidation()
+        {
+            Identifier identifier = new Identifier("9780316769531");
+            Assert.That(identifier.isValid, Is.False);
+            Assert.That(identifier.identifierType, Is.EqualTo(IdentifierType.Invalid));
+        }
     }
 }

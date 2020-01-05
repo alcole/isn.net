@@ -19,6 +19,8 @@ namespace IsnLibrary
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
         public static Regex IssnRx = new Regex(@"\d{4}[-]?\d{3}[0-9xX]{1}",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        public static Regex IsniRx = new Regex(@"\d{4}[-]?\d{4}[-]?\d{4}[-]?\d{3}[0-9xX]{1}",
+            RegexOptions.Compiled | RegexOptions.IgnoreCase);
     }
 
 

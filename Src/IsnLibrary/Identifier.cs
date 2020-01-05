@@ -15,12 +15,12 @@
             identifierType = isValid ? setType() : IdentifierType.Invalid;
             if (isValid && identifierType == IdentifierType.ISBN10)
             {
-                isn = "978" + isn.Substring(0, 9) + CheckDigitRoutines.generateEanCheckdigit("978" + isn);
+                isn = $"{"978"}{isn.Substring(0, 9)}{CheckDigitRoutines.generateEanCheckdigit($"{"978"}{isn}")}";
                 identifierType = IdentifierType.ISBN;
             }
             if (isValid && identifierType == IdentifierType.EANISSN)
             {
-                isn = isn.Substring(3, 7) + CheckDigitRoutines.generateCheckIsbn10Issn(isn.Substring(3, 7), 8);
+                isn = $"{isn.Substring(3, 7)},{CheckDigitRoutines.generateCheckIsbn10Issn(isn.Substring(3, 7), 8)}";
                 identifierType = IdentifierType.ISSN;
             }
         }
@@ -61,7 +61,6 @@
             }
             switch (isn)
             {
-                //todo ISMN, ean977, 
                 case var result when IsnRegexs.IsmnRx.IsMatch(isn):
                     type = IdentifierType.ISMN;
                     break;
