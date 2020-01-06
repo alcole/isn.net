@@ -11,7 +11,7 @@ namespace IsnLibrary.Tests
         }
 
         [Test]
-        public void NewIdentifier_CorrectIsbn_PassValidation()
+        public void IsbnTest()
         {
             Identifier ISBN = new Identifier("9780262510875");
             Assert.That(ISBN.isValid, Is.True);
@@ -19,7 +19,7 @@ namespace IsnLibrary.Tests
         }
         
         [Test]
-        public void Isbn10test()
+        public void Isbn10Test()
         {
             Identifier isbn10 = new Identifier("0262510871");
             Assert.That(isbn10.isValid, Is.True);
@@ -51,7 +51,7 @@ namespace IsnLibrary.Tests
         }
 
         [Test]
-        public void Ismntest()
+        public void IsmnTest()
         {
             Identifier Ismn = new Identifier("979-0-9016791-7-7");
             Assert.That(Ismn.isValid, Is.True);
@@ -61,12 +61,41 @@ namespace IsnLibrary.Tests
 
 
         [Test]
-        public void Issntest()
+        public void IssnTest()
         {
             Identifier issn = new Identifier("00014664");
             Assert.That(issn.isValid, Is.True);
             Assert.That(issn.identifierType, Is.EqualTo(IdentifierType.ISSN));
         }
+
+        [Test]
+        public void IsniTest()
+        {
+            Isni isni = new Isni("0000 0004 5352 4211");
+            Assert.That(isni.isValid, Is.True);
+            Assert.That(isni.identifierType, Is.EqualTo(IdentifierType.ISNI));
+            Assert.That(isni.isORCID, Is.False);
+        }
+
+        [Test]
+        public void OrcidTest()
+        {
+            Isni isni = new Isni("0000-0002-1825-0097");
+            Assert.That(isni.isValid, Is.True);
+            Assert.That(isni.identifierType, Is.EqualTo(IdentifierType.ISNI));
+            Assert.That(isni.isORCID, Is.True);
+        }
+
+        [Test]
+        public void OrcidWithXTest()
+        {
+            Isni isni = new Isni("0000-0002-9079-593X");
+            Assert.That(isni.isValid, Is.True);
+            Assert.That(isni.identifierType, Is.EqualTo(IdentifierType.ISNI));
+            Assert.That(isni.isORCID, Is.True);
+        }
+
+
 
         [Test]
         public void NewIdentifier_BadCheckDigit_FailsValidation()
